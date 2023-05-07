@@ -49,7 +49,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      imgUrlInput: ''
+      imgUrlInput: '',
+      imgDetected: ''
     }
   }
 
@@ -60,6 +61,7 @@ class App extends Component {
 
   //Function to Submit Image URL to Clarifai
   onSubmit = () => {
+    this.setState({ imgDetected: this.state.imgUrlInput })
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", returnClarifaiRequestOption(this.state.imgUrlInput))
       .then(response => response.json())
       .then(result => console.log(result))
@@ -74,7 +76,7 @@ class App extends Component {
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} />
-        <FaceRecognition />
+        <FaceRecognition imgDetected={this.state.imgDetected} />
       </div>
     );
   }
