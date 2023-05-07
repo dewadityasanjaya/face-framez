@@ -2,6 +2,6 @@
   background: radial-gradient(circle, #87CEEB, #1E90FF);
 }
 
-img {
+.Tilt img {
   filter: brightness(0) invert(1);
 }
