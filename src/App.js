@@ -8,6 +8,7 @@ import SignInForm from './components/SignInForm/SignInForm';
 import RegisterForm from './components/RegisterForm/RegisterForm';
 import ParticlesBg from 'particles-bg'
 import './App.css';
+import defaultImage from './components/FaceRecognition/defaultimage.png'
 
 // Clarifai Setup
 const MODEL_ID = 'face-detection';
@@ -52,17 +53,23 @@ class App extends Component {
     super();
     this.state = {
       imgUrlInput: '',
-      imgDetected: '',
+      imgDetected: defaultImage,
       frames: [],
       route: 'signin',
       isSignedIn: false,
+      imgNumber: 0
     }
   }
 
   //Function to Route Page
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({ isSignedIn: false })
+      this.setState({
+        isSignedIn: false,
+        frames: [],
+        imgDetected: defaultImage,
+        imgNumber: 0
+      })
     } else if (route === 'home') {
       this.setState({ isSignedIn: true })
     }
@@ -92,7 +99,10 @@ class App extends Component {
 
   //Function to Display Face Frame
   displayFaceFrame = (frames) => {
-    this.setState({ frames: frames })
+    this.setState({
+      frames: frames,
+      imgNumber: frames.length
+    })
   }
 
   //Function to Change Input Value
@@ -123,7 +133,7 @@ class App extends Component {
           this.state.route === 'home'
             ? <div>
               <Logo />
-              <Rank />
+              <Rank imgNumber={this.state.imgNumber} />
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onSubmit={this.onSubmit}

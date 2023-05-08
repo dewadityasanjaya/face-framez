@@ -1,13 +1,13 @@
 import React from "react";
 
-const Rank = () => {
+const Rank = ({ imgNumber }) => {
     return (
         <div>
             <div className="f3 white">
-                {'Your current rank is ...'}
+                {'You have frame ...'}
             </div>
             <div className="f1 white">
-                {'#2'}
+                {imgNumber + ' face(s).'}
             </div>
         </div>
     )
