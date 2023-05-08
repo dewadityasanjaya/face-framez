@@ -50,8 +50,28 @@ class App extends Component {
     super();
     this.state = {
       imgUrlInput: '',
-      imgDetected: ''
+      imgDetected: '',
+      frame: {}
     }
+  }
+
+  //Function to Calculate Face Frame
+  calculateFaceFrame = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - (clarifaiFace.right_col * width),
+      bottomRow: height - (clarifaiFace.bottom_row * height)
+    }
+  }
+
+  //Function to Display Face Frame
+  displayFaceFrame = (frame) => {
+    this.setState({ frame: frame })
   }
 
   //Function to Change Input Value
@@ -64,7 +84,9 @@ class App extends Component {
     this.setState({ imgDetected: this.state.imgUrlInput })
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", returnClarifaiRequestOption(this.state.imgUrlInput))
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => {
+        this.displayFaceFrame(this.calculateFaceFrame(result))
+      })
       .catch(error => console.log('error', error));
   }
 
@@ -76,7 +98,7 @@ class App extends Component {
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} />
-        <FaceRecognition imgDetected={this.state.imgDetected} />
+        <FaceRecognition frame={this.state.frame} imgDetected={this.state.imgDetected} />
       </div>
     );
   }
