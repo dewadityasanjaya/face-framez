@@ -51,27 +51,34 @@ class App extends Component {
     this.state = {
       imgUrlInput: '',
       imgDetected: '',
-      frame: {}
+      frames: []
     }
   }
 
   //Function to Calculate Face Frame
   calculateFaceFrame = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const clarifaiFace = data.outputs[0].data.regions;
+    const clarifaiFaceList = [];
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
+    let clarifaiFaceIDCounter = 0;
+    for (let item of clarifaiFace) {
+      clarifaiFaceList.push({
+        key: clarifaiFaceIDCounter,
+        leftCol: item.region_info.bounding_box.left_col * width,
+        topRow: item.region_info.bounding_box.top_row * height,
+        rightCol: width - (item.region_info.bounding_box.right_col * width),
+        bottomRow: height - (item.region_info.bounding_box.bottom_row * height)
+      })
+      clarifaiFaceIDCounter++;
     }
+    return clarifaiFaceList;
   }
 
   //Function to Display Face Frame
-  displayFaceFrame = (frame) => {
-    this.setState({ frame: frame })
+  displayFaceFrame = (frames) => {
+    this.setState({ frames: frames })
   }
 
   //Function to Change Input Value
@@ -98,7 +105,7 @@ class App extends Component {
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} />
-        <FaceRecognition frame={this.state.frame} imgDetected={this.state.imgDetected} />
+        <FaceRecognition frames={this.state.frames} imgDetected={this.state.imgDetected} />
       </div>
     );
   }
