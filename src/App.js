@@ -4,6 +4,8 @@ import Logo from './components/Logo/Logo'
 import Rank from './components/Rank/Rank'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition'
+import SignInForm from './components/SignInForm/SignInForm';
+import RegisterForm from './components/RegisterForm/RegisterForm';
 import ParticlesBg from 'particles-bg'
 import './App.css';
 
@@ -51,8 +53,20 @@ class App extends Component {
     this.state = {
       imgUrlInput: '',
       imgDetected: '',
-      frames: []
+      frames: [],
+      route: 'signin',
+      isSignedIn: false,
     }
+  }
+
+  //Function to Route Page
+  onRouteChange = (route) => {
+    if (route === 'signout') {
+      this.setState({ isSignedIn: false })
+    } else if (route === 'home') {
+      this.setState({ isSignedIn: true })
+    }
+    this.setState({ route: route });
   }
 
   //Function to Calculate Face Frame
@@ -65,7 +79,7 @@ class App extends Component {
     let clarifaiFaceIDCounter = 0;
     for (let item of clarifaiFace) {
       clarifaiFaceList.push({
-        key: clarifaiFaceIDCounter,
+        key: 'image' + clarifaiFaceIDCounter,
         leftCol: item.region_info.bounding_box.left_col * width,
         topRow: item.region_info.bounding_box.top_row * height,
         rightCol: width - (item.region_info.bounding_box.right_col * width),
@@ -101,11 +115,35 @@ class App extends Component {
     return (
       <div className='App'>
         <ParticlesBg color='#FFFFFF' type="cobweb" bg={true} />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} />
-        <FaceRecognition frames={this.state.frames} imgDetected={this.state.imgDetected} />
+        <Navigation
+          isSignedIn={this.state.isSignedIn}
+          onRouteChange={this.onRouteChange}
+        />
+        {
+          this.state.route === 'home'
+            ? <div>
+              <Logo />
+              <Rank />
+              <ImageLinkForm
+                onInputChange={this.onInputChange}
+                onSubmit={this.onSubmit}
+              />
+              <FaceRecognition
+                frames={this.state.frames}
+                imgDetected={this.state.imgDetected}
+              />
+            </div>
+            : (
+              this.state.route === 'signin'
+                ? <SignInForm
+                  onRouteChange={this.onRouteChange}
+                />
+                : <RegisterForm
+                  onRouteChange={this.onRouteChange}
+                />
+            )
+        }
+
       </div>
     );
   }
