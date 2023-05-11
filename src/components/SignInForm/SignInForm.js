@@ -31,8 +31,7 @@ class SignInForm extends Component {
                 if (data === 'success') {
                     this.props.onRouteChange('home')
                 }
-            })
-
+            });
     }
 
     render() {
