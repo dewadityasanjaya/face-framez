@@ -1,16 +1,16 @@
 import React from "react";
 
-const Rank = ({ imgNumber }) => {
+const Entries = ({ name, entries }) => {
     return (
         <div>
             <div className="f3 white">
-                {'You have frame ...'}
+                {'Hi ' + name + ', your current entry count is'}
             </div>
             <div className="f1 white">
-                {imgNumber + ' face(s).'}
+                {entries + ' image(s).'}
             </div>
         </div>
     )
 }
 
-export default Rank;
+export default Entries;

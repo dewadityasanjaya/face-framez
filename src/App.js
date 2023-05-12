@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from './components/Navigation/Navigation'
 import Logo from './components/Logo/Logo'
-import Rank from './components/Rank/Rank'
+import Entries from './components/Entries/Entries'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition'
 import SignInForm from './components/SignInForm/SignInForm';
@@ -57,8 +57,27 @@ class App extends Component {
       frames: [],
       route: 'signin',
       isSignedIn: false,
-      imgNumber: 0
+      imgNumber: 0,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
+  }
+
+  loadUser = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    })
   }
 
   //Function to Route Page
@@ -133,10 +152,14 @@ class App extends Component {
           this.state.route === 'home'
             ? <div>
               <Logo />
-              <Rank imgNumber={this.state.imgNumber} />
+              <Entries
+                name={this.state.user.name}
+                entries={this.state.user.entries}
+              />
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onSubmit={this.onSubmit}
+                imgNumber={this.state.imgNumber}
               />
               <FaceRecognition
                 frames={this.state.frames}
@@ -147,13 +170,14 @@ class App extends Component {
               this.state.route === 'signin'
                 ? <SignInForm
                   onRouteChange={this.onRouteChange}
+                  loadUser={this.loadUser}
                 />
                 : <RegisterForm
                   onRouteChange={this.onRouteChange}
+                  loadUser={this.loadUser}
                 />
             )
         }
-
       </div>
     );
   }
