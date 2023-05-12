@@ -68,6 +68,7 @@ class App extends Component {
     }
   }
 
+  //Function to load user after sign in and register
   loadUser = (data) => {
     this.setState({
       user: {
@@ -135,6 +136,17 @@ class App extends Component {
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", returnClarifaiRequestOption(this.state.imgUrlInput))
       .then(response => response.json())
       .then(result => {
+        fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, { entries: count }))
+          })
         this.displayFaceFrame(this.calculateFaceFrame(result))
       })
       .catch(error => console.log('error', error));
