@@ -47,25 +47,28 @@ const returnClarifaiRequestOption = (imageUrl) => {
   return requestOptions;
 }
 
+// Initial State
+const initialState = {
+  imgUrlInput: '',
+  imgDetected: defaultImage,
+  frames: [],
+  route: 'signin',
+  isSignedIn: false,
+  imgNumber: 0,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  }
+}
+
 class App extends Component {
   //App State
   constructor() {
     super();
-    this.state = {
-      imgUrlInput: '',
-      imgDetected: defaultImage,
-      frames: [],
-      route: 'signin',
-      isSignedIn: false,
-      imgNumber: 0,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
-    }
+    this.state = initialState
   }
 
   //Function to load user after sign in and register
@@ -84,12 +87,7 @@ class App extends Component {
   //Function to Route Page
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({
-        isSignedIn: false,
-        frames: [],
-        imgDetected: defaultImage,
-        imgNumber: 0
-      })
+      this.setState(initialState)
     } else if (route === 'home') {
       this.setState({ isSignedIn: true })
     }
